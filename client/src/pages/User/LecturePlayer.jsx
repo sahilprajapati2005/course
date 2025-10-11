@@ -1,55 +1,75 @@
 // src/pages/User/LecturePlayer.jsx
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { courses } from '../../api/api';
 
 const LecturePlayer = () => {
-    // These would typically come from the route state or parent component
-    const { courseId, lectureId } = useParams(); 
-    const [videoUrl, setVideoUrl] = useState(null);
+    // A hook to easily get query params
+    const useQuery = () => new URLSearchParams(useLocation().search);
+    
+    const { courseId } = useParams();
+    const query = useQuery();
+    const lectureId = query.get('lectureId'); // Get lectureId from URL query
+
+    const [videoUrl, setVideoUrl] = useState('');
+    const [lectureTitle, setLectureTitle] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        if (!lectureId) {
+            setError("No lecture selected.");
+            setLoading(false);
+            return;
+        }
+
         const fetchLecture = async () => {
             try {
-                // 3. user can watch the course after buy the course
                 const res = await courses.getLectureUrl(courseId, lectureId);
-                setVideoUrl(res.data.data.lectureUrl);
-                setLoading(false);
+                setVideoUrl(res.data.data.videoUrl);
+                setLectureTitle(res.data.data.title);
             } catch (err) {
-                // Backend will return 403 Forbidden if user is not enrolled
-                setError(err.response?.data?.message || "Access Denied. Please ensure you have purchased this course.");
+                setError(err.response?.data?.message || "Could not load lecture.");
+            } finally {
                 setLoading(false);
             }
         };
+
         fetchLecture();
     }, [courseId, lectureId]);
 
-    if (loading) return <div className="p-4">Loading video stream...</div>;
+    if (loading) return <div className="text-center p-8">Loading Lecture...</div>;
     
-    // Check if videoUrl is available and handle errors
-    if (error || !videoUrl) return (
-        <div className="p-6 text-red-700 bg-red-100 border border-red-300 rounded m-8">
-            <h1 className="text-2xl font-bold mb-3">Playback Error</h1>
-            <p>{error}</p>
-        </div>
-    );
-
     return (
-        <div className="p-4 md:p-8 max-w-5xl mx-auto">
-            <h1 className="text-2xl font-bold mb-4">Lecture Playback</h1>
-            
-            {/* Responsive Video Player */}
-            <div className="relative w-full" style={{ paddingBottom: '56.25%' /* 16:9 Aspect Ratio */ }}>
-                <video 
-                    src={videoUrl} 
-                    controls 
-                    className="absolute top-0 left-0 w-full h-full object-cover rounded-lg shadow-xl"
-                />
+        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <div className="lg:grid lg:grid-cols-3 lg:gap-8">
+                {/* Video Player */}
+                <div className="lg:col-span-2">
+                    <h1 className="text-2xl font-bold text-gray-900 mb-4">{lectureTitle || 'Lecture'}</h1>
+                    {error || !videoUrl ? (
+                        <div className="aspect-w-16 aspect-h-9 bg-gray-200 flex items-center justify-center rounded-lg">
+                            <p className="text-red-600">{error || "Video could not be loaded."}</p>
+                        </div>
+                    ) : (
+                        <div className="aspect-w-16 aspect-h-9 bg-black rounded-lg shadow-xl overflow-hidden">
+                            <video src={videoUrl} controls autoPlay className="w-full h-full" />
+                        </div>
+                    )}
+                </div>
+
+                {/* Lecture List (Placeholder) */}
+                <div className="mt-8 lg:mt-0 lg:col-span-1">
+                    <div className="bg-white p-4 rounded-lg shadow-md">
+                        <h2 className="text-xl font-semibold mb-4">Course Lectures</h2>
+                        <ul className="space-y-2">
+                           {/* In a real app, you would fetch all lectures for the course and list them here */}
+                           <li className="p-2 rounded-md bg-gray-100 text-gray-700">Lecture 1</li>
+                           <li className="p-2 rounded-md hover:bg-gray-100 text-gray-500">Lecture 2</li>
+                           <li className="p-2 rounded-md hover:bg-gray-100 text-gray-500">Lecture 3</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            
-            <p className="mt-4 text-gray-700">Video source secured via Cloudinary and access verified on the backend.</p>
         </div>
     );
 };

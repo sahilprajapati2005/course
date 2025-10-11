@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom'; // Link added for watching
 import { courses, payment, dashboard } from './src/api/api.js';
-import { useAuth } from '../context/AuthContext.jsx';
+import { useAuth } from './src/context/AuthContext.jsx';
 
 const CourseDetail = () => {
     const { courseId } = useParams();
