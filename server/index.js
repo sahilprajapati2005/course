@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db.js');
+const path = require('path');
+
 
  // Assume this file handles DB connection
 
@@ -27,6 +29,8 @@ process.on('exit', (code) => {
 connectDB();
 
 const app = express();
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 const allowedOrigins = [
     'http://localhost:5173', // Default port for Vite/React development

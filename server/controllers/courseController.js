@@ -7,7 +7,8 @@
 // @access  Private (Admin)
 const Course = require('../model/Course.js');
 const Lecture = require('../model/Lecture.js');
-const Enrollment = require('../model/Enrollment.js'); // Enrollment model
+const Enrollment = require('../model/Enrollment.js');
+ // Enrollment model
 const cloudinary = require('../utils/cloudinary.js'); // Cloudinary utility
 
 const addLecture = async (req, res) => {
