@@ -11,32 +11,77 @@ const Enrollment = require('../model/Enrollment.js');
  // Enrollment model
 const cloudinary = require('../utils/cloudinary.js'); // Cloudinary utility
 
+// const addLecture = async (req, res) => {
+//     const { courseId } = req.params;
+//     const { title, description, order } = req.body;
+    
+//     // Multer ensures req.file exists and is valid at this point
+//     const filePath = req.file.path; // This is the path to the temporary file
+
+//     try {
+//         // 8. Admin upload videos lecture that store in a cloudinary.
+//         // The uploader utility handles the Cloudinary upload AND the local file cleanup.
+//         const result = await cloudinary.uploader.upload(filePath, {
+//             folder: 'course-videos', // Organized folder in Cloudinary
+//             resource_type: 'video',  // Essential for video processing
+//         });
+
+//         // 2. Create the Lecture model entry
+//         const newLecture = await Lecture.create({
+//             title,
+//             description,
+//             order: order || 1,
+//             course: courseId,
+//             videoUrl: result.secure_url,
+//             cloudinaryPublicId: result.public_id,
+//         });
+
+//         // 3. Update the Course model
+//         await Course.findByIdAndUpdate(courseId, {
+//             $push: { lectures: newLecture._id }
+//         });
+
+//         res.status(201).json({ success: true, message: 'Lecture uploaded and saved successfully', data: newLecture });
+
+//     } catch (error) {
+//         // Handle Cloudinary/DB errors
+//         console.error('Lecture Upload Failed:', error);
+//         res.status(500).json({ success: false, message: 'Failed to upload or save lecture data.', error: error.message });
+//     }
+// };
+
+
+
 const addLecture = async (req, res) => {
     const { courseId } = req.params;
     const { title, description, order } = req.body;
     
-    // Multer ensures req.file exists and is valid at this point
-    const filePath = req.file.path; // This is the path to the temporary file
+    const filePath = req.file.path;
 
     try {
-        // 8. Admin upload videos lecture that store in a cloudinary.
-        // The uploader utility handles the Cloudinary upload AND the local file cleanup.
+        // 1. Upload to Cloudinary (this will no longer delete the local file)
         const result = await cloudinary.uploader.upload(filePath, {
-            folder: 'course-videos', // Organized folder in Cloudinary
-            resource_type: 'video',  // Essential for video processing
+            folder: 'course-videos',
+            resource_type: 'video',
         });
 
-        // 2. Create the Lecture model entry
+        // 2. CONSTRUCT THE LOCAL URL PATH
+        // req.file.filename gives you just the file name (e.g., "video-12345.mp4")
+        // We build the public URL that can be accessed from the browser.
+        const localVideoUrl = `/uploads/videos/${req.file.filename}`;
+
+        // 3. Create the Lecture model entry with BOTH URLs
         const newLecture = await Lecture.create({
             title,
             description,
             order: order || 1,
             course: courseId,
-            videoUrl: result.secure_url,
+            videoUrl: result.secure_url, // Cloudinary URL
+            localVideoPath: localVideoUrl, // Local Server URL
             cloudinaryPublicId: result.public_id,
         });
 
-        // 3. Update the Course model
+        // 4. Update the Course model
         await Course.findByIdAndUpdate(courseId, {
             $push: { lectures: newLecture._id }
         });
@@ -44,11 +89,11 @@ const addLecture = async (req, res) => {
         res.status(201).json({ success: true, message: 'Lecture uploaded and saved successfully', data: newLecture });
 
     } catch (error) {
-        // Handle Cloudinary/DB errors
         console.error('Lecture Upload Failed:', error);
         res.status(500).json({ success: false, message: 'Failed to upload or save lecture data.', error: error.message });
     }
 };
+
 // --- Add Course (Admin) ---
 
 
@@ -110,9 +155,23 @@ const searchCourses = async (req, res) => {
     }
 };
 
+const getCourseDetails = async (req, res) => {
+    try {
+        const course = await Course.findById(req.params.courseId).populate('lectures', 'title _id');
+        if (!course) {
+            return res.status(404).json({ success: false, message: 'Course not found' });
+        }
+        res.status(200).json({ success: true, data: course });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to fetch course details', error: error.message });
+    }
+};
+
+
 module.exports = {
     addLecture,
     addCourse,
     getLecture,
     searchCourses,
+    getCourseDetails
 };

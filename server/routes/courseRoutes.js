@@ -1,7 +1,7 @@
 // routes/courseRoutes.js
 const express = require('express');
 
-const { addCourse, addLecture, getLecture, searchCourses } = require('../controllers/courseController.js');
+const { addCourse, addLecture, getLecture, searchCourses, getCourseDetails } = require('../controllers/courseController.js');
 const { protect, authorize } = require('../middlewares/authMiddleware.js');
 const { uploadVideo } = require('../middlewares/uploadMiddleware.js');   
 
@@ -34,5 +34,8 @@ router.get(
     authorize('user', 'admin'), 
     getLecture
 );
+
+router.get('/:courseId', getCourseDetails); 
+
 
 module.exports = router;
