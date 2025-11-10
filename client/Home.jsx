@@ -64,7 +64,7 @@ const Home = () => {
                             placeholder="Search for anything..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="flex-grow p-4 rounded-l-md border-0 focus:ring-indigo-500 text-gray-800"
+                            className="flex-grow p-4 rounded-l-md border-0 focus:ring-indigo-500 text-gray-100"
                         />
                         <button type="submit" className="bg-indigo-500 text-white px-6 py-3 rounded-r-md hover:bg-indigo-600 transition duration-300">
                             Search
