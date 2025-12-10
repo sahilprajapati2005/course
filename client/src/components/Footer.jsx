@@ -33,7 +33,7 @@ const Footer = () => {
                     </div>
                 </div>
                 <div className="mt-8 border-t border-gray-700 pt-8 text-center text-gray-400 text-sm">
-                    &copy; {new Date().getFullYear()} CourseBuy Platform. All Rights Reserved.
+                    &copy; {new Date().getFullYear()} VidyaSetuPlatform. All Rights Reserved.
                 </div>
             </div>
         </footer>

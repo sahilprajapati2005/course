@@ -82,7 +82,7 @@ const CourseDetail = () => {
                                     disabled={!user && !isEnrolled}
                                     className={`w-full px-6 py-3 text-lg font-bold rounded-lg transition duration-300 ${
                                         isEnrolled 
-                                            ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                                            ? 'bg-blue-600 text-white hover:bg-blue-700'  
                                             : 'bg-green-600 text-white hover:bg-green-700'
                                     }`}
                                 >

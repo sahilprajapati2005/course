@@ -20,10 +20,8 @@ const Header = () => {
                     
                     <Link to="/" className="flex items-center space-x-3">
                         {/* THIS IS THE UPDATED LINE 👇 */}
-                        <img src={logo} alt="SkillForge Logo" className="h-12 w-auto" />
-                        <span className="text-2xl font-bold text-indigo-600">
-                           Academy.Com 
-                        </span>
+                        <img src={logo} alt="SkillForge Logo" className="h-15 w-auto" />
+                       
                     </Link>
 
                     {/* Desktop Navigation */}

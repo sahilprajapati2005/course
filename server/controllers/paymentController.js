@@ -1,14 +1,10 @@
 // controllers/paymentController.js
 
-// const Razorpay = require('razorpay'); // You'll need to install 'razorpay'
 const Razorpay = require("razorpay");
-
 const Course = require("../model/Course.js");
 const Enrollment = require("../model/Enrollment.js");
 const User = require("../model/User.js");
 const crypto = require("crypto");
-
-// Built-in Node module
 
 // Initialize Razorpay instance (use credentials from .env)
 const razorpay = new Razorpay({
@@ -31,31 +27,64 @@ const createOrder = async (req, res) => {
         .json({ success: false, message: "Course not found." });
     }
 
-    // Amount must be in the smallest currency unit (e.g., paise for INR)
-    const amount = course.price * 100;
+    // 1. Check if already paid
+    const existingPaidEnrollment = await Enrollment.findOne({
+      user: userId,
+      course: courseId,
+      isPaid: true,
+    });
 
+    if (existingPaidEnrollment) {
+      return res
+        .status(400)
+        .json({ success: false, message: "You are already enrolled in this course." });
+    }
+
+    // --- START OF FIX ---
+
+    // 2. Find or Create the pending enrollment document FIRST
+    const pendingEnrollment = await Enrollment.findOneAndUpdate(
+      {
+        user: userId,
+        course: courseId,
+        isPaid: false,
+      },
+      {
+        $set: {
+          amountPaid: course.price, // Set/update the price
+        }
+      },
+      {
+        upsert: true, // If no doc matches, create it
+        new: true,    // Return the new/updated doc
+        setDefaultsOnInsert: true,
+      }
+    );
+
+    // 3. Create Razorpay options USING the enrollment's unique _id
+    const amount = course.price * 100;
     const options = {
       amount: amount,
       currency: "INR",
-      receipt: `receipt_order_${userId}_${courseId}`,
+      receipt: pendingEnrollment._id.toString(), // <-- FIX: This is 24 chars
     };
 
-    // 6. use payment system with the help of razorpay
+    // 4. Create the order with Razorpay
     const order = await razorpay.orders.create(options);
 
-    // Create a temporary Enrollment record with the order ID
-    await Enrollment.create({
-      user: userId,
-      course: courseId,
-      razorpayOrderId: order.id,
-      amountPaid: course.price,
-      isPaid: false, // Will be set to true upon verification
-    });
+    // 5. Update the pending enrollment with the new razorpayOrderId
+    pendingEnrollment.razorpayOrderId = order.id;
+    await pendingEnrollment.save();
 
+    // --- END OF FIX ---
+
+    // 6. Send response
     res
       .status(201)
       .json({ success: true, orderId: order.id, amount: course.price });
+      
   } catch (error) {
+    console.error("Order creation failed:", error); // Log the real error
     res
       .status(500)
       .json({
@@ -66,9 +95,8 @@ const createOrder = async (req, res) => {
   }
 };
 
-// @desc    Verify Razorpay payment signature and confirm enrollment
-// @route   POST /api/v1/payment/verify-payment
-// @access  Private (User - called after successful Razorpay redirect)
+// ... (Your verifyPayment function is correct, no changes needed) ...
+
 const verifyPayment = async (req, res) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
@@ -101,8 +129,8 @@ const verifyPayment = async (req, res) => {
 
     if (!enrollment) {
       return res
-        .status(404)
-        .json({ success: false, message: "Enrollment record not found." });
+        .status(440) // Using a different status to see if it's this error
+        .json({ success: false, message: "Enrollment record not found for this Order ID." });
     }
 
     // Optional: Update User's enrolledCourses and Course's totalEnrollments
@@ -121,6 +149,7 @@ const verifyPayment = async (req, res) => {
         enrollment,
       });
   } catch (error) {
+    console.error("Payment verification failed:", error); // Log the real error
     res
       .status(500)
       .json({

@@ -80,6 +80,15 @@ const CourseDetail = () => {
                 description: `Purchase: ${course.title}`,
                 order_id: orderId,
                 
+                // --- APPLIED CHANGE ---
+                // This will force the modal to only show UPI options
+                modal: {
+                    options: {
+                        upi_only: true
+                    }
+                },
+                // --- END OF CHANGE ---
+                
                 handler: async function (response) {
                     // Step 3: Backend verifies signature (POST /api/v1/payment/verify-payment)
                     const verifyData = {

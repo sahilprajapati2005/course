@@ -38,8 +38,11 @@ const allowedOrigins = [
     // Add your production frontend domain here later (e.g., 'https://www.yourdomain.com')
 ];
 
-app.use(cors())
-
+app.use(cors({
+    origin: allowedOrigins,
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'] // <-- THIS IS THE FIX
+}));
 
 // Body parser
 app.use(express.json());
