@@ -49,6 +49,7 @@ const LecturePlayer = () => {
 
     return (
         <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            {/* FIX: Removed 'h-[calc(100vh-100px)]' to allow the page to scroll naturally */}
             <div className="lg:grid lg:grid-cols-3 lg:gap-8">
                 
                 {/* --- Left Column: Video Player --- */}
@@ -59,6 +60,7 @@ const LecturePlayer = () => {
                         </div>
                     ) : (
                         <>
+                            {/* aspect-video ensures 16:9 ratio */}
                             <div className="w-full aspect-video bg-black rounded-lg shadow-xl overflow-hidden relative">
                                 {lectureError ? (
                                     <div className="absolute inset-0 flex items-center justify-center bg-gray-900 text-red-500">
@@ -80,7 +82,6 @@ const LecturePlayer = () => {
                 </div>
 
                 {/* --- Right Column: Lecture List --- */}
-                {/* FIX 2: Changed fixed height to adaptive height with max limit */}
                 <div className="lg:col-span-1">
                     <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
                         <div className="p-4 border-b border-gray-200 bg-gray-50">
@@ -89,7 +90,7 @@ const LecturePlayer = () => {
                         
                         {/* h-fit: Height fits the content (shrinks if few items)
                            max-h-[600px]: Stops growing after 600px
-                           overflow-y-auto: Adds scrollbar if content exceeds max-height
+                           overflow-y-auto: Adds scrollbar INSIDE this box if content exceeds max-height
                         */}
                         <div className="h-fit max-h-[600px] overflow-y-auto p-2">
                             {courseLectures.length === 0 ? (
