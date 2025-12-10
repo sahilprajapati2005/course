@@ -1,4 +1,4 @@
-// src/pages/Auth/Register.jsx
+// client/src/pages/Auth/Register.jsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { auth } from '../../api/api';
@@ -21,73 +21,72 @@ const Register = () => {
         setLoading(true);
         try {
             await auth.register(formData);
-            setMessage('Registration successful! You will be redirected to login.');
-            setTimeout(() => navigate('/login'), 2500);
+            setMessage('Account created! Redirecting to login...');
+            setTimeout(() => navigate('/login'), 2000);
         } catch (err) {
-            setError(err.response?.data?.message || 'Registration failed. Please check your details and try again.');
+            setError(err.response?.data?.message || 'Registration failed. Please try again.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 animate-fade-in-down">
-            <div className="max-w-md w-full space-y-8 p-10 bg-white shadow-xl rounded-2xl">
-                <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                        Create Your Account
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 py-12 px-4 sm:px-6 lg:px-8">
+            {/* Background decorations */}
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                <div className="absolute bottom-20 left-20 w-80 h-80 bg-white opacity-10 rounded-full blur-3xl"></div>
+                <div className="absolute top-20 right-20 w-64 h-64 bg-yellow-300 opacity-10 rounded-full blur-3xl"></div>
+            </div>
+
+            <div className="max-w-md w-full space-y-8 bg-white/95 backdrop-blur-sm p-10 rounded-3xl shadow-2xl relative z-10">
+                <div className="text-center">
+                    <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+                        Create Account
                     </h2>
-                    <p className="mt-2 text-center text-sm text-gray-600">
-                        Or{' '}
-                        <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
-                            sign in to your existing account
-                        </Link>
+                    <p className="mt-2 text-sm text-gray-600">
+                        Start your learning journey today
                     </p>
                 </div>
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                    {error && <div className="p-3 bg-red-100 text-red-700 rounded-md text-center text-sm">{error}</div>}
-                    {message && <div className="p-3 bg-green-100 text-green-700 rounded-md text-center text-sm">{message}</div>}
+                
+                <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
+                    {error && <div className="bg-red-50 text-red-700 p-3 rounded-lg text-sm border-l-4 border-red-500">{error}</div>}
+                    {message && <div className="bg-green-50 text-green-700 p-3 rounded-lg text-sm border-l-4 border-green-500">{message}</div>}
                     
-                    <div className="rounded-md shadow-sm -space-y-px">
+                    <div className="space-y-4">
                         <div>
-                            <label htmlFor="name" className="sr-only">Name</label>
+                            <label className="block text-sm font-bold text-gray-700 mb-1 ml-1">Full Name</label>
                             <input
-                                id="name"
                                 name="name"
                                 type="text"
                                 required
                                 value={formData.name}
                                 onChange={handleChange}
-                                className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                placeholder="Full Name"
+                                className="appearance-none block w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:bg-white transition-all duration-200"
+                                placeholder="John Doe"
                             />
                         </div>
                         <div>
-                            <label htmlFor="email-address" className="sr-only">Email address</label>
+                            <label className="block text-sm font-bold text-gray-700 mb-1 ml-1">Email Address</label>
                             <input
-                                id="email-address"
                                 name="email"
                                 type="email"
-                                autoComplete="email"
                                 required
                                 value={formData.email}
                                 onChange={handleChange}
-                                className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                placeholder="Email address"
+                                className="appearance-none block w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:bg-white transition-all duration-200"
+                                placeholder="you@example.com"
                             />
                         </div>
                         <div>
-                            <label htmlFor="password" className="sr-only">Password</label>
+                            <label className="block text-sm font-bold text-gray-700 mb-1 ml-1">Password</label>
                             <input
-                                id="password"
                                 name="password"
                                 type="password"
-                                autoComplete="new-password"
                                 required
                                 value={formData.password}
                                 onChange={handleChange}
-                                className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                placeholder="Password"
+                                className="appearance-none block w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:bg-white transition-all duration-200"
+                                placeholder="••••••••"
                             />
                         </div>
                     </div>
@@ -96,10 +95,19 @@ const Register = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400"
+                            className={`w-full flex justify-center py-3.5 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5 ${loading ? 'opacity-75 cursor-not-allowed' : ''}`}
                         >
-                            {loading ? 'Registering...' : 'Create Account'}
+                            {loading ? 'Creating...' : 'Sign Up'}
                         </button>
+                    </div>
+
+                    <div className="text-center">
+                        <p className="text-sm text-gray-600">
+                            Already have an account?{' '}
+                            <Link to="/login" className="font-bold text-purple-600 hover:text-purple-500 hover:underline transition-colors">
+                                Sign in here
+                            </Link>
+                        </p>
                     </div>
                 </form>
             </div>
