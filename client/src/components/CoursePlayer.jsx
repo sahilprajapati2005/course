@@ -1,24 +1,26 @@
 import React from 'react';
 
 // This component expects a 'course' object as a prop
-// The object should look like: { title: '...', description: '...', videoPath: '/uploads/videos/video-12345.mp4' }
 const CoursePlayer = ({ course }) => {
     
     // Your backend server's address
     const BACKEND_URL = 'http://localhost:5000';
 
-    // **This is the key step:** Create the full, absolute URL for the video file
+    // Create the full, absolute URL for the video file
     const videoSrc = `${BACKEND_URL}${course.videoPath}`;
 
     return (
-        <div>
-            <h2>{course.title}</h2>
-            <p>{course.description}</p>
+        <div className="w-full max-w-4xl mx-auto">
+            <h2 className="text-2xl font-bold mb-2 text-gray-800">{course.title}</h2>
+            <p className="text-gray-600 mb-4">{course.description}</p>
             
-            <video width="720" controls key={videoSrc}>
-                <source src={videoSrc} type="video/mp4" />
-                Your browser does not support the video tag.
-            </video>
+            {/* FIX: Replaced fixed width with responsive classes */}
+            <div className="w-full aspect-video bg-black rounded-lg shadow-lg overflow-hidden">
+                <video className="w-full h-full object-contain" controls key={videoSrc}>
+                    <source src={videoSrc} type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+            </div>
         </div>
     );
 };
