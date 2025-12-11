@@ -60,8 +60,11 @@ app.use("/api/v1/courses", courseRoutes);
 app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/users", userRoutes);
 
-const PORT = process.env.PORT || 5000;
+// --- CHANGE THIS SECTION ---
+if (require.main === module) {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
 
-app.listen(PORT, () =>
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
-);
+// Export the app for Vercel
+module.exports = app;
