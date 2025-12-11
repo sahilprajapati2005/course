@@ -16,8 +16,9 @@ const app = express();
 const allowedOrigins = [
     'http://localhost:5173',
     'http://localhost:3000',
-    'https://vidhyaasetu.netlify.app' // Your Netlify URL
-];
+    'https://vidhyaasetu.netlify.app',
+    'https://course-five-lyart.vercel.app'
+ ];
 
 app.use(cors({
     origin: function (origin, callback) {

@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Ensure this matches the VITE_BACKEND_URL in your frontend .env file
-const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000/api/v1';
+const API_URL = 'https://course-five-lyart.vercel.app/api/v1';
 
 
 const api = axios.create({
