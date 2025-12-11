@@ -7,14 +7,14 @@ const connectDB = async () => {
     try {
         // Debug: Show connection attempt
         console.log('🔍 Attempting MongoDB connection...');
-        console.log(`📍 Connection URI: ${process.env.MONGO_URI ? process.env.MONGO_URI.split('@')[0] + '@...' : 'NOT SET'}`);
+        console.log(`📍 Connection URI: ${process.env.MONGODB_URI ? process.env.MONGODB_URI.split('@')[0] + '@...' : 'NOT SET'}`);
         
         // Set mongoose debug mode for detailed logging
         if (process.env.NODE_ENV === 'development') {
             mongoose.set('debug', true);
         }
 
-        const conn = await mongoose.connect(process.env.MONGO_URI, {
+        const conn = await mongoose.connect(process.env.MONGODB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             serverSelectionTimeoutMS: 5000, // Timeout after 5 seconds

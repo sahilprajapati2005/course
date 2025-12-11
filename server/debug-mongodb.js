@@ -8,10 +8,10 @@ console.log('================================\n');
 // Check environment variables
 console.log('1️⃣  Environment Variables:');
 console.log(`   NODE_ENV: ${process.env.NODE_ENV}`);
-console.log(`   MONGO_URI: ${process.env.MONGO_URI ? '✅ Set' : '❌ NOT SET'}`);
-if (process.env.MONGO_URI) {
+console.log(`   MONGODB_URI: ${process.env.MONGODB_URI ? '✅ Set' : '❌ NOT SET'}`);
+if (process.env.MONGODB_URI) {
     // Hide password in logs
-    const uriParts = process.env.MONGO_URI.split('@');
+    const uriParts = process.env.MONGODB_URI.split('@');
     console.log(`   URI Preview: ${uriParts[0]}@...`);
 }
 console.log();
@@ -24,7 +24,7 @@ const testConnection = async () => {
         // Enable mongoose debug logging
         mongoose.set('debug', true);
         
-        const conn = await mongoose.connect(process.env.MONGO_URI, {
+        const conn = await mongoose.connect(process.env.MONGODB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             serverSelectionTimeoutMS: 5000,
@@ -63,7 +63,7 @@ const testConnection = async () => {
         console.log('\n💡 Troubleshooting Tips:');
         console.log('   1. Make sure MongoDB is running locally or Atlas is accessible');
         console.log('   2. Check your internet connection for Atlas connections');
-        console.log('   3. Verify MONGO_URI in .env file is correct');
+        console.log('   3. Verify MONGODB_URI in .env file is correct');
         console.log('   4. If using Atlas, check IP whitelist and credentials');
         
         process.exit(1);
