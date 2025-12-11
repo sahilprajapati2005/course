@@ -1,0 +1,10 @@
+# --- SECTION 1: Permanent Redirects ---
+/legacy/contact-us /contact 301
+/old-page /new-page 301
+
+# --- SECTION 3: Custom 404 Page (Optional) ---
+# /* /404.html 404 
+
+# --- SECTION 4: SPA Fallback (MOST IMPORTANT FOR REACT/VUE) ---
+# This must be the LAST rule.
+/* /index.html 200
