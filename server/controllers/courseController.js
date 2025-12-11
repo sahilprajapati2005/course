@@ -10,6 +10,10 @@ const Lecture = require('../model/Lecture.js');
 const Enrollment = require('../model/Enrollment.js');
  // Enrollment model
 const cloudinary = require('../utils/cloudinary.js'); // Cloudinary utility
+// At the top of server/controllers/courseController.js
+const streamifier = require('streamifier');
+// Import the raw cloudinary object from your utils
+const { cloudinary } = require('../utils/cloudinary.js');
 
 // const addLecture = async (req, res) => {
 //     const { courseId } = req.params;
@@ -56,41 +60,51 @@ const addLecture = async (req, res) => {
     const { courseId } = req.params;
     const { title, description, order } = req.body;
     
-    const filePath = req.file.path;
-
     try {
-        // 1. Upload to Cloudinary (this will no longer delete the local file)
-        const result = await cloudinary.uploader.upload(filePath, {
-            folder: 'course-videos',
-            resource_type: 'video',
-        });
+        // Define a function to handle the stream upload
+        const uploadFromBuffer = (buffer) => {
+            return new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream(
+                    {
+                        folder: 'course-videos',
+                        resource_type: 'video',
+                    },
+                    (error, result) => {
+                        if (result) {
+                            resolve(result);
+                        } else {
+                            reject(error);
+                        }
+                    }
+                );
+                // Pipe the file buffer into the upload stream
+                streamifier.createReadStream(buffer).pipe(stream);
+            });
+        };
 
-        // 2. CONSTRUCT THE LOCAL URL PATH
-        // req.file.filename gives you just the file name (e.g., "video-12345.mp4")
-        // We build the public URL that can be accessed from the browser.
-        const localVideoUrl = `/uploads/videos/${req.file.filename}`;
+        // 1. Upload the video buffer to Cloudinary
+        const result = await uploadFromBuffer(req.file.buffer);
 
-        // 3. Create the Lecture model entry with BOTH URLs
+        // 2. Create the Lecture in DB
         const newLecture = await Lecture.create({
             title,
             description,
             order: order || 1,
             course: courseId,
-            videoUrl: result.secure_url, // Cloudinary URL
-            localVideoPath: localVideoUrl, // Local Server URL
+            videoUrl: result.secure_url,       // Cloudinary URL
             cloudinaryPublicId: result.public_id,
         });
 
-        // 4. Update the Course model
+        // 3. Update Course
         await Course.findByIdAndUpdate(courseId, {
             $push: { lectures: newLecture._id }
         });
 
-        res.status(201).json({ success: true, message: 'Lecture uploaded and saved successfully', data: newLecture });
+        res.status(201).json({ success: true, message: 'Lecture uploaded successfully', data: newLecture });
 
     } catch (error) {
         console.error('Lecture Upload Failed:', error);
-        res.status(500).json({ success: false, message: 'Failed to upload or save lecture data.', error: error.message });
+        res.status(500).json({ success: false, message: 'Failed to upload lecture.', error: error.message });
     }
 };
 
@@ -106,6 +120,9 @@ const addLecture = async (req, res) => {
 //         res.status(500).json({ success: false, message: 'Failed to create course', error: error.message });
 //     }
 // };
+
+
+
 
 const addCourse = async (req, res) => {
     try {
