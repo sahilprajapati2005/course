@@ -33,9 +33,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 const allowedOrigins = [
-    'http://localhost:5173', // Default port for Vite/React development
-    'http://localhost:3000', // Default port for Create React App
-    // Add your production frontend domain here later (e.g., 'https://www.yourdomain.com')
+    'http://localhost:5173',
+    'https://your-site-name.netlify.app', // <--- Add your Netlify URL here
 ];
 
 app.use(cors({
