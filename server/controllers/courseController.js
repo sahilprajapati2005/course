@@ -9,7 +9,6 @@ const Course = require('../model/Course.js');
 const Lecture = require('../model/Lecture.js');
 const Enrollment = require('../model/Enrollment.js');
  // Enrollment model
-const cloudinary = require('../utils/cloudinary.js'); // Cloudinary utility
 // At the top of server/controllers/courseController.js
 const streamifier = require('streamifier');
 // Import the raw cloudinary object from your utils
