@@ -37,7 +37,10 @@ const createOrder = async (req, res) => {
     if (existingPaidEnrollment) {
       return res
         .status(400)
-        .json({ success: false, message: "You are already enrolled in this course." });
+        .json({
+          success: false,
+          message: "You are already enrolled in this course.",
+        });
     }
 
     // --- START OF FIX ---
@@ -52,11 +55,11 @@ const createOrder = async (req, res) => {
       {
         $set: {
           amountPaid: course.price, // Set/update the price
-        }
+        },
       },
       {
         upsert: true, // If no doc matches, create it
-        new: true,    // Return the new/updated doc
+        new: true, // Return the new/updated doc
         setDefaultsOnInsert: true,
       }
     );
@@ -82,16 +85,13 @@ const createOrder = async (req, res) => {
     res
       .status(201)
       .json({ success: true, orderId: order.id, amount: course.price });
-      
   } catch (error) {
     console.error("Order creation failed:", error); // Log the real error
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Order creation failed",
-        error: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Order creation failed",
+      error: error.message,
+    });
   }
 };
 
@@ -109,12 +109,10 @@ const verifyPayment = async (req, res) => {
 
     // Check if the generated signature matches the signature received from Razorpay
     if (digest !== razorpay_signature) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Payment verification failed: Invalid Signature.",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Payment verification failed: Invalid Signature.",
+      });
     }
 
     // Find and update the Enrollment record to confirm payment
@@ -130,7 +128,10 @@ const verifyPayment = async (req, res) => {
     if (!enrollment) {
       return res
         .status(440) // Using a different status to see if it's this error
-        .json({ success: false, message: "Enrollment record not found for this Order ID." });
+        .json({
+          success: false,
+          message: "Enrollment record not found for this Order ID.",
+        });
     }
 
     // Optional: Update User's enrolledCourses and Course's totalEnrollments
@@ -141,22 +142,18 @@ const verifyPayment = async (req, res) => {
       $push: { enrolledCourses: enrollment._id },
     });
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Payment verified and course unlocked!",
-        enrollment,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Payment verified and course unlocked!",
+      enrollment,
+    });
   } catch (error) {
     console.error("Payment verification failed:", error); // Log the real error
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Payment verification failed",
-        error: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Payment verification failed",
+      error: error.message,
+    });
   }
 };
 

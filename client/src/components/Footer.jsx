@@ -1,69 +1,45 @@
 // client/src/components/Footer.jsx
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
     return (
-        <footer className="bg-gray-800 border-t border-gray-700 mt-12">
-            <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5">
-                    {/* Column 1: Brand Info (Always visible) */}
-                    <div className="col-span-2 md:col-span-1 lg:col-span-2 space-y-4">
-                        <Link to="/" className="text-2xl font-bold text-white">
-                            LearnSphere
+        <footer className="bg-gray-900 border-t border-gray-800 mt-auto">
+            <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                    
+                    {/* Brand & Copyright */}
+                    <div className="text-center md:text-left">
+                        <Link to="/" className="text-lg font-bold text-white tracking-tight hover:text-indigo-400 transition-colors">
+                            Vidhyadsetu
                         </Link>
-                        <p className="text-gray-400 text-sm">
-                            Master new skills with our expertly crafted online courses. Quality education, accessible anytime.
+                        <p className="text-[10px] text-gray-500 mt-1">
+                            &copy; {new Date().getFullYear()} vidhyadsetu. All rights reserved.
                         </p>
                     </div>
 
-                    {/* Column 2: Quick Links (Visible on larger screens) */}
-                    <div className="space-y-4">
-                        <h3 className="text-sm font-semibold text-white uppercase tracking-wider">
-                            Explore
-                        </h3>
-                        <ul className="space-y-3">
-                            <li><Link to="/" className="text-base text-gray-400 hover:text-white transition-colors">Home</Link></li>
-                            <li><Link to="/user/dashboard" className="text-base text-gray-400 hover:text-white transition-colors">Dashboard</Link></li>
-                            <li><Link to="/about" className="text-base text-gray-400 hover:text-white transition-colors">About Us</Link></li>
-                        </ul>
-                    </div>
-                    
-                    {/* Column 3: Legal (Visible on larger screens) */}
-                    <div className="space-y-4">
-                        <h3 className="text-sm font-semibold text-white uppercase tracking-wider">
-                            Legal
-                        </h3>
-                        <ul className="space-y-3">
-                            <li><Link to="/privacy" className="text-base text-gray-400 hover:text-white transition-colors">Privacy Policy</Link></li>
-                            <li><Link to="/terms" className="text-base text-gray-400 hover:text-white transition-colors">Terms of Service</Link></li>
-                            <li><Link to="/support" className="text-base text-gray-400 hover:text-white transition-colors">Support</Link></li>
-                        </ul>
-                    </div>
+                    {/* Navigation Links - Compact Row */}
+                    <nav className="flex flex-wrap justify-center gap-6">
+                        <Link to="/" className="text-xs text-gray-400 hover:text-white transition-colors font-medium">
+                            Home
+                        </Link>
+                        <Link to="/user/dashboard" className="text-xs text-gray-400 hover:text-white transition-colors font-medium">
+                            My Learning
+                        </Link>
+                        <Link to="/courses" className="text-xs text-gray-400 hover:text-white transition-colors font-medium">
+                            Courses
+                        </Link>
+                    </nav>
 
-                    {/* Column 4: Contact/Social (Small on mobile, larger on desktop) */}
-                    <div className="col-span-2 md:col-span-1 space-y-4">
-                         <h3 className="text-sm font-semibold text-white uppercase tracking-wider">
-                            Connect
-                        </h3>
-                        <div className="flex space-x-4">
-                            {/* Simple Social Icons (using placeholders) */}
-                            <a href="#" className="text-gray-400 hover:text-indigo-400 transition-colors">
-                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.211-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.784 7 2.457v6.778z"/></svg>
-                            </a>
-                            <a href="#" className="text-gray-400 hover:text-indigo-400 transition-colors">
-                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.795-1.574 2.164-2.722-.951.555-2.005.959-3.127 1.184-.897-.957-2.178-1.555-3.594-1.555-3.124 0-5.663 2.539-5.663 5.663 0 .445.05.877.147 1.291-4.708-.237-8.882-2.492-11.671-5.91-.484.825-.765 1.782-.765 2.793 0 1.968.995 3.708 2.503 4.739-.925-.03-1.794-.282-2.551-.703v.07c0 2.748 1.956 5.043 4.545 5.568-.474.13-.978.201-1.494.201-.363 0-.715-.034-1.06-.102.722 2.24 2.81 3.882 5.299 3.926-1.942 1.522-4.39 2.433-7.058 2.433-.466 0-.923-.028-1.373-.082 2.528 1.623 5.544 2.576 8.79 2.576 10.518 0 16.208-8.708 16.208-16.208 0-.244-.005-.488-.013-.731.836-.605 1.564-1.353 2.14-2.222z"/></svg>
-                            </a>
-                        </div>
+                    {/* Social Icons - Minimalist */}
+                    <div className="flex space-x-4">
+                        <a href="#" className="text-gray-500 hover:text-white transition-colors" aria-label="Twitter">
+                            <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg>
+                        </a>
+                        <a href="#" className="text-gray-500 hover:text-white transition-colors" aria-label="GitHub">
+                            <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" /></svg>
+                        </a>
                     </div>
-                </div>
-
-                {/* Copyright/Bottom Bar */}
-                <div className="mt-12 border-t border-gray-700 pt-8">
-                    <p className="text-base text-gray-500 md:text-center">
-                        &copy; {new Date().getFullYear()} LearnSphere, Inc. All rights reserved.
-                    </p>
                 </div>
             </div>
         </footer>
